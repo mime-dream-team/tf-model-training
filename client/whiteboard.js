@@ -17,6 +17,7 @@ export default events
 //// Canvas setup
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
+let strokePool = []
 
 /**
  * Draw a line on the whiteboard.
@@ -142,16 +143,26 @@ function setupCanvas() {
     window.addEventListener('resize', resize)
 
     window.addEventListener('mousedown', function (e) {
+
         currentMousePosition = pos(e)
     });
 
     window.addEventListener('mousemove', function (e) {
+        console.log('buttons',e.buttons);
+        //Buttons equals 1 when left click is pressed, else 0
         if (!e.buttons) return;
         lastMousePosition = currentMousePosition
         currentMousePosition = pos(e)
-        lastMousePosition && currentMousePosition &&
+        if(lastMousePosition && currentMousePosition){
             draw(lastMousePosition, currentMousePosition, color, true);
+            strokePool.push([lastMousePosition, currentMousePosition])
+        }
     });
+
+    window.addEventListener('mouseup', (e) => {
+        console.log('Stroke has finished', strokePool);
+        strokePool = []
+    })
 }
 
 function pos(e) {
