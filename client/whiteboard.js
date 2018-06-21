@@ -27,6 +27,30 @@ let strokePool = []
  * @param {String} strokeColor color of the line
  * @param {bool} shouldBroadcast whether to emit an event for this draw
  */
+
+
+function generateDataSets(inputArr, numBuckets){
+    let allDataPoints= [];
+    const dataGap = Math.floor(inputArr.length / numBuckets);
+  
+    for(let i = 0; i < numBuckets; i++){
+      let dataSample = reduceDataPoints(i, inputArr, dataGap);
+      allDataPoints.push(dataSample);
+    }
+  
+    return allDataPoints;
+  }
+  
+  function reduceDataPoints(startIdx, inputArr, dataGap){
+    let dataSample = [];
+    let pointer = startIdx;
+    while(dataSample.length < dataGap){
+     dataSample.push(inputArr[pointer % inputArr.length])
+      pointer += dataGap;
+    }
+    return dataSample;
+  }
+
 export function draw(start, end, strokeColor='black', shouldBroadcast=true) {
     // Draw the line between the start and end positions
     // that is colored with the given color.
@@ -161,6 +185,9 @@ function setupCanvas() {
 
     window.addEventListener('mouseup', (e) => {
         console.log('Stroke has finished', strokePool);
+        generateDataSets(strokePool, 10)[0].forEach(stroke => {
+            draw(...stroke,'green')
+        })
         strokePool = []
     })
 }
