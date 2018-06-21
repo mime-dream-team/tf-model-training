@@ -29,27 +29,28 @@ let strokePool = []
  */
 
 
-function generateDataSets(inputArr, numBuckets){
-    let allDataPoints= [];
-    const dataGap = Math.floor(inputArr.length / numBuckets);
-  
-    for(let i = 0; i < numBuckets; i++){
-      let dataSample = reduceDataPoints(i, inputArr, dataGap);
-      allDataPoints.push(dataSample);
-    }
-  
-    return allDataPoints;
-  }
-  
-  function reduceDataPoints(startIdx, inputArr, dataGap){
-    let dataSample = [];
-    let pointer = startIdx;
-    while(dataSample.length < dataGap){
-     dataSample.push(inputArr[pointer % inputArr.length])
-      pointer += dataGap;
-    }
-    return dataSample;
-  }
+function generateDataSets(inputArr, numBuckets) {
+	let allDataPoints = [];
+	const dataGap = Math.floor(inputArr.length / numBuckets);
+	console.log(dataGap);
+	for (let i = 0; i < numBuckets; i++) {
+		let dataSample = reduceDataPoints(i, inputArr, dataGap, numBuckets);
+		allDataPoints.push(dataSample);
+	}
+
+	return allDataPoints;
+}
+
+function reduceDataPoints(startIdx, inputArr, dataGap, numBuckets) {
+	let dataSample = [];
+	let pointer = startIdx;
+	// console.log(dataGap)
+	while (dataSample.length < numBuckets) {
+		dataSample.push(inputArr[pointer % inputArr.length]);
+		pointer += dataGap;
+	}
+	return dataSample;
+}
 
 export function draw(start, end, strokeColor='black', shouldBroadcast=true) {
     // Draw the line between the start and end positions
@@ -185,8 +186,8 @@ function setupCanvas() {
 
     window.addEventListener('mouseup', (e) => {
         console.log('Stroke has finished', strokePool);
-        generateDataSets(strokePool, 10)[0].forEach(stroke => {
-            draw(...stroke,'green')
+        generateDataSets(strokePool, 10).forEach(stroke => {
+            stroke.forEach(sto => draw(...sto,'green'))
         })
         strokePool = []
     })
