@@ -10,6 +10,8 @@
 
 import {EventEmitter} from 'events'
 
+import func from './model';
+
 const events = new EventEmitter()
 
 export default events
@@ -17,6 +19,7 @@ export default events
 //// Canvas setup
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
+let strokePool = []
 
 /**
  * Draw a line on the whiteboard.
@@ -26,6 +29,31 @@ const ctx = canvas.getContext('2d')
  * @param {String} strokeColor color of the line
  * @param {bool} shouldBroadcast whether to emit an event for this draw
  */
+
+
+function generateDataSets(inputArr, numBuckets) {
+	let allDataPoints = [];
+	const dataGap = Math.floor(inputArr.length / numBuckets);
+	console.log(dataGap);
+	for (let i = 0; i < numBuckets; i++) {
+		let dataSample = reduceDataPoints(i, inputArr, dataGap, numBuckets);
+		allDataPoints.push(dataSample);
+	}
+
+	return allDataPoints;
+}
+
+function reduceDataPoints(startIdx, inputArr, dataGap, numBuckets) {
+	let dataSample = [];
+	let pointer = startIdx;
+	// console.log(dataGap)
+	while (dataSample.length < numBuckets) {
+		dataSample.push(inputArr[pointer % inputArr.length]);
+		pointer += dataGap;
+	}
+	return dataSample;
+}
+
 export function draw(start, end, strokeColor='black', shouldBroadcast=true) {
     // Draw the line between the start and end positions
     // that is colored with the given color.
@@ -142,16 +170,30 @@ function setupCanvas() {
     window.addEventListener('resize', resize)
 
     window.addEventListener('mousedown', function (e) {
+
         currentMousePosition = pos(e)
     });
 
     window.addEventListener('mousemove', function (e) {
+        console.log('buttons',e.buttons);
+        //Buttons equals 1 when left click is pressed, else 0
         if (!e.buttons) return;
         lastMousePosition = currentMousePosition
         currentMousePosition = pos(e)
-        lastMousePosition && currentMousePosition &&
+        if(lastMousePosition && currentMousePosition){
             draw(lastMousePosition, currentMousePosition, color, true);
+            strokePool.push([lastMousePosition, currentMousePosition])
+        }
     });
+
+    window.addEventListener('mouseup', (e) => {
+        // console.log('Stroke has finished', strokePool);
+        generateDataSets(strokePool, 10).forEach(stroke => {
+            console.log(...stroke);
+            stroke.forEach(sto => draw(...sto,'green'))
+        })
+        strokePool = []
+    })
 }
 
 function pos(e) {
@@ -162,3 +204,5 @@ function pos(e) {
 }
 
 document.addEventListener('DOMContentLoaded', setup)
+
+func()

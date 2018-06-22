@@ -8,7 +8,9 @@
     "start": "webpack -w & nodemon server.js"
   },
   "dependencies": {
-    "express": "^4.12.3"
+    "@tensorflow/tfjs": "^0.11.7",
+    "express": "^4.12.3",
+    "socket.io": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
