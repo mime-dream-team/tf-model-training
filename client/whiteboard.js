@@ -10,6 +10,8 @@
 
 import {EventEmitter} from 'events'
 
+import func from './model';
+
 const events = new EventEmitter()
 
 export default events
@@ -185,8 +187,9 @@ function setupCanvas() {
     });
 
     window.addEventListener('mouseup', (e) => {
-        console.log('Stroke has finished', strokePool);
+        // console.log('Stroke has finished', strokePool);
         generateDataSets(strokePool, 10).forEach(stroke => {
+            console.log(...stroke);
             stroke.forEach(sto => draw(...sto,'green'))
         })
         strokePool = []
@@ -201,3 +204,5 @@ function pos(e) {
 }
 
 document.addEventListener('DOMContentLoaded', setup)
+
+func()
