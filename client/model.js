@@ -3,33 +3,22 @@
 import * as tf from '@tensorflow/tfjs';
 
 export default function model(){
-    const trainingData = tf.tensor2d([
-        [100,200],
-        [100,200],
-        [100,200],
-        [100,200],
-        [100,200],
-        [100,200],
-        [100,200],
-        [100,200],
-        [100,200],
-        [100,200]]);
+    const trainingData = tf.tensor2d([[200,100,200,100,200,100,200,100,200,100,200,100,200,100,200,100,200,100,200,100],[300,100,300,100,300,100,300,100,300,100,300,100,300,100,300,100,300,100,300,100]]);
     
-    const outputData = tf.tensor2d([[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]);
-    // const outputData = tf.tensor3d([[[1],[1],[1],[1],[1]]]);
+    const outputData = tf.tensor2d([[1,.8,.6,.4,.2],[.2,.4,.6,.8,1]]);
     
-    const testingData = tf.tensor2d([[100,200],[100,200],[100,200],[100,200],[100,200],[100,200],[100,200],[100,200],[100,200],[100,200]]); 
+    const testingData = tf.tensor2d([[200,100,200,100,200,100,200,100,200,100,200,100,200,100,200,100,200,100,200,100],[300,100,300,100,300,100,300,100,300,100,300,100,300,100,300,100,300,100,300,100]]); 
     
     const model = tf.sequential();
     
     model.add(tf.layers.dense({
-        inputShape: [10,2],
+        inputShape: [20],
         activation: "sigmoid",
-        units: 11
+        units: 21
     }))
     
     model.add(tf.layers.dense({
-        inputShape: [11,2],
+        inputShape: [21],
         activation: "sigmoid",
         units: 5
     }))
