@@ -4,13 +4,6 @@
 import whiteboard, {draw} from './whiteboard'
 import io from 'socket.io-client';
 
-// Example of listening to draw events:
-//   (This logging will probably get really annoying):
-// whiteboard.on('draw', console.log)
-
-// Example: Draw a single stroke.
-// draw([0, 0], [250, 250], 'red', true)
-
 const socket = io(window.location.origin)
 
 socket.on('connect', () => console.log('I have made a persistent two-way connection to the server!'));
