@@ -158,11 +158,8 @@ function setupCanvas() {
   })
 
   window.addEventListener('mouseup', e => {
-    // console.log('Stroke has finished', strokePool);
-    generateDataSets(strokePool, 10).forEach(stroke => {
-      console.log(...stroke)
-      stroke.forEach(sto => draw(...sto, 'green'))
-    })
+    let dataSet = generateDataSets(strokePool, 10)
+    console.log(dataSet)
     strokePool = []
   })
 }
@@ -173,4 +170,4 @@ function pos(e) {
 
 document.addEventListener('DOMContentLoaded', setup)
 
-func()
+// func()
