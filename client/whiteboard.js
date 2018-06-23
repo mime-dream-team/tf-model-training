@@ -13,6 +13,7 @@ import {EventEmitter} from 'events'
 import func from './model';
 
 const events = new EventEmitter()
+import { strokeDb } from './fire/store';
 
 export default events
 
@@ -188,8 +189,15 @@ function setupCanvas() {
 
     window.addEventListener('mouseup', (e) => {
         // console.log('Stroke has finished', strokePool);
+        let shape = "circle";
+        strokeDb.add({
+            stroke: JSON.stringify(strokePool),
+            shape
+        })
+        .catch(console.error)
+
         generateDataSets(strokePool, 10).forEach(stroke => {
-            console.log(...stroke);
+            // console.log(...stroke);
             stroke.forEach(sto => draw(...sto,'green'))
         })
         strokePool = []
@@ -205,4 +213,4 @@ function pos(e) {
 
 document.addEventListener('DOMContentLoaded', setup)
 
-func()
+// func()
