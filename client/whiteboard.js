@@ -72,7 +72,6 @@ const shapes = ['circle', 'square']
 
 function setup() {
   document.body.appendChild(canvas)
-
   setupColorPicker()
   setupShapePicker()
   setupCanvas()
@@ -146,22 +145,17 @@ function setupCanvas() {
   window.addEventListener('resize', resize)
 
   window.addEventListener('mousedown', function(e) {
-    console.log(e)
     currentMousePosition = pos(e)
   })
-  window.addEventListener('touchstart', function(e) {
-    console.log('touch started')
-    currentMousePosition = pos(e)
-    let touch = e.touches[0]
-    let mouseEvent = new MouseEvent('mousedown', {
-      clientX: touch.clientX,
-      clientY: touch.clientY
-    })
-    window.dispatchEvent(mouseEvent)
-  })
+  window.addEventListener(
+    'touchstart',
+    function(e) {
+      currentMousePosition = pos(e.touches[0])
+    },
+    false
+  )
 
   window.addEventListener('mousemove', function(e) {
-    // console.log('buttons', e.buttons)
     if (!e.buttons) return
     lastMousePosition = currentMousePosition
     currentMousePosition = pos(e)
@@ -170,19 +164,21 @@ function setupCanvas() {
       strokePool.push([lastMousePosition, currentMousePosition])
     }
   })
-  window.addEventListener('touchmove', function(e) {
-    console.log('touch is moving')
-    if (!e.buttons) return
-    lastMousePosition = currentMousePosition
-    currentMousePosition = pos(e)
-    if (lastMousePosition && currentMousePosition) {
-      draw(lastMousePosition, currentMousePosition, color, true)
-      strokePool.push([lastMousePosition, currentMousePosition])
-    }
-  })
+  window.addEventListener(
+    'touchmove',
+    function(e) {
+      lastMousePosition = currentMousePosition
+      currentMousePosition = pos(e.touches[0])
+      if (lastMousePosition && currentMousePosition) {
+        draw(lastMousePosition, currentMousePosition, color, true)
+        strokePool.push([lastMousePosition, currentMousePosition])
+      }
+    },
+    false
+  )
 
   window.addEventListener('mouseup', e => {
-    // console.log('Stroke has finished', strokePool)
+    // console.log(strokePool, shape)
     if (e.target.tagName !== 'CANVAS') return
     // strokeDb
     //   .add({
@@ -193,44 +189,42 @@ function setupCanvas() {
     strokePool = []
   })
 
-  window.addEventListener('touchend', e => {
-    console.log('touch is up')
-    if (e.target.tagName !== 'CANVAS') return
-    strokeDb
-      .add({
-        stroke: JSON.stringify(strokePool),
-        shape
-      })
-      .catch(console.error)
-    strokePool = []
-  })
+  window.addEventListener(
+    'touchend',
+    e => {
+      // console.log(strokePool, shape)
+      if (e.target.tagName !== 'CANVAS') return
+      // strokeDb
+      //   .add({
+      //     stroke: JSON.stringify(strokePool),
+      //     shape
+      //   })
+      //   .catch(console.error)
+      strokePool = []
+    },
+    false
+  )
 }
 
 // Prevent scrolling when touching the canvas
 document.body.addEventListener(
   'touchstart',
   function(e) {
-    if (e.target == canvas) {
-      e.preventDefault()
-    }
-  },
-  false
-)
-document.body.addEventListener(
-  'touchend',
-  function(e) {
-    if (e.target == canvas) {
-      e.preventDefault()
-    }
+    e.preventDefault()
   },
   false
 )
 document.body.addEventListener(
   'touchmove',
   function(e) {
-    if (e.target == canvas) {
-      e.preventDefault()
-    }
+    e.preventDefault()
+  },
+  false
+)
+document.body.addEventListener(
+  'touchend',
+  function(e) {
+    e.preventDefault()
   },
   false
 )
