@@ -9,7 +9,6 @@
  */
 
 import { EventEmitter } from 'events'
-import func from './model'
 
 const events = new EventEmitter()
 import { strokeDb } from './fire/store';
@@ -216,4 +215,3 @@ function setupShapePicker(){
 
 document.addEventListener('DOMContentLoaded', setup)
 
-// func()
