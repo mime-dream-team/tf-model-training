@@ -15,6 +15,10 @@ import { strokeDb } from './fire/store';
 
 export default events
 
+// Testing the training functions
+import runTraining from './model/training'
+console.log(runTraining())
+
 //// Canvas setup
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
