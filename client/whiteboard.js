@@ -8,9 +8,9 @@
  *   - events: an EventEmitter that emits `draw` events.
  */
 
-import {EventEmitter} from 'events'
-
-import func from './model';
+import { EventEmitter } from 'events'
+import func from './model'
+import { generateDataSets } from './dataTransforms'
 
 const events = new EventEmitter()
 import { strokeDb } from './fire/store';
@@ -31,45 +31,25 @@ let strokePool = []
  * @param {bool} shouldBroadcast whether to emit an event for this draw
  */
 
+export function draw(
+  start,
+  end,
+  strokeColor = 'black',
+  shouldBroadcast = true
+) {
+  // Draw the line between the start and end positions
+  // that is colored with the given color.
+  ctx.beginPath()
+  ctx.strokeStyle = strokeColor
+  ctx.moveTo(...start)
+  ctx.lineTo(...end)
+  ctx.closePath()
+  ctx.stroke()
 
-function generateDataSets(inputArr, numBuckets) {
-	let allDataPoints = [];
-	const dataGap = Math.floor(inputArr.length / numBuckets);
-	console.log(dataGap);
-	for (let i = 0; i < numBuckets; i++) {
-		let dataSample = reduceDataPoints(i, inputArr, dataGap, numBuckets);
-		allDataPoints.push(dataSample);
-	}
-
-	return allDataPoints;
+  // If shouldBroadcast is truthy, we will emit a draw event to listeners
+  // with the start, end and color data.
+  shouldBroadcast && events.emit('draw', start, end, strokeColor)
 }
-
-function reduceDataPoints(startIdx, inputArr, dataGap, numBuckets) {
-	let dataSample = [];
-	let pointer = startIdx;
-	// console.log(dataGap)
-	while (dataSample.length < numBuckets) {
-		dataSample.push(inputArr[pointer % inputArr.length]);
-		pointer += dataGap;
-	}
-	return dataSample;
-}
-
-export function draw(start, end, strokeColor='black', shouldBroadcast=true) {
-    // Draw the line between the start and end positions
-    // that is colored with the given color.
-    ctx.beginPath();
-    ctx.strokeStyle = strokeColor;
-    ctx.moveTo(...start);
-    ctx.lineTo(...end);
-    ctx.closePath();
-    ctx.stroke();
-
-    // If shouldBroadcast is truthy, we will emit a draw event to listeners
-    // with the start, end and color data.
-    shouldBroadcast &&
-        events.emit('draw', start, end, strokeColor);
-};
 
 // State
 //// Stroke color
@@ -77,25 +57,17 @@ let color;
 let shape;
 //// Position tracking
 let currentMousePosition = {
-    x: 0,
-    y: 0
-};
+  x: 0,
+  y: 0
+}
 
 let lastMousePosition = {
-    x: 0,
-    y: 0
-};
+  x: 0,
+  y: 0
+}
 
 //// Color picker settings
-const colors = [
-    'black',
-    'purple',
-    'red',
-    'green',
-    'orange',
-    'yellow',
-    'brown',
-]
+const colors = ['black', 'purple', 'red', 'green', 'orange', 'yellow', 'brown']
 
 const shapes = [
     'circle',
@@ -103,7 +75,7 @@ const shapes = [
 ]
 
 function setup() {
-    document.body.appendChild(canvas)
+  document.body.appendChild(canvas)
 
     setupColorPicker()
     setupShapePicker()
@@ -111,64 +83,64 @@ function setup() {
 }
 
 function setupColorPicker() {
-    const picker = document.createElement('div')
-    picker.classList.add('color-selector')
-    colors
-        .map(color => {
-            const marker = document.createElement('div')
-            marker.classList.add('marker')
-            marker.dataset.color = color
-            marker.style.backgroundColor = color
-            return marker
-        })
-        .forEach(color => picker.appendChild(color))
-
-    picker.addEventListener('click', ({target}) => {
-        color = target.dataset.color
-        if (!color) return
-        const current = picker.querySelector('.selected')
-        current && current.classList.remove('selected')
-        target.classList.add('selected')
+  const picker = document.createElement('div')
+  picker.classList.add('color-selector')
+  colors
+    .map(color => {
+      const marker = document.createElement('div')
+      marker.classList.add('marker')
+      marker.dataset.color = color
+      marker.style.backgroundColor = color
+      return marker
     })
+    .forEach(color => picker.appendChild(color))
 
-    document.body.appendChild(picker)
+  picker.addEventListener('click', ({ target }) => {
+    color = target.dataset.color
+    if (!color) return
+    const current = picker.querySelector('.selected')
+    current && current.classList.remove('selected')
+    target.classList.add('selected')
+  })
 
-    // Select the first color
-    picker.firstChild.click()
+  document.body.appendChild(picker)
+
+  // Select the first color
+  picker.firstChild.click()
 }
 
-
 function resize() {
-    // Unscale the canvas (if it was previously scaled)
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  // Unscale the canvas (if it was previously scaled)
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
 
-    // The device pixel ratio is the multiplier between CSS pixels
-    // and device pixels
-    var pixelRatio = window.devicePixelRatio || 1;
+  // The device pixel ratio is the multiplier between CSS pixels
+  // and device pixels
+  var pixelRatio = window.devicePixelRatio || 1
 
-    // Allocate backing store large enough to give us a 1:1 device pixel
-    // to canvas pixel ratio.
-    var w = canvas.clientWidth * pixelRatio,
-        h = canvas.clientHeight * pixelRatio;
-    if (w !== canvas.width || h !== canvas.height) {
-        // Resizing the canvas destroys the current content.
-        // So, save it...
-        var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  // Allocate backing store large enough to give us a 1:1 device pixel
+  // to canvas pixel ratio.
+  var w = canvas.clientWidth * pixelRatio,
+    h = canvas.clientHeight * pixelRatio
+  if (w !== canvas.width || h !== canvas.height) {
+    // Resizing the canvas destroys the current content.
+    // So, save it...
+    var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
-        canvas.width = w; canvas.height = h;
+    canvas.width = w
+    canvas.height = h
 
-        // ...then restore it.
-        ctx.putImageData(imgData, 0, 0)
-    }
+    // ...then restore it.
+    ctx.putImageData(imgData, 0, 0)
+  }
 
-    // Scale the canvas' internal coordinate system by the device pixel
-    // ratio to ensure that 1 canvas unit = 1 css pixel, even though our
-    // backing store is larger.
-    ctx.scale(pixelRatio, pixelRatio);
+  // Scale the canvas' internal coordinate system by the device pixel
+  // ratio to ensure that 1 canvas unit = 1 css pixel, even though our
+  // backing store is larger.
+  ctx.scale(pixelRatio, pixelRatio)
 
-    ctx.lineWidth = 5
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
+  ctx.lineWidth = 5
+  ctx.lineJoin = 'round'
+  ctx.lineCap = 'round'
 }
 
 function setupCanvas() {
@@ -188,7 +160,7 @@ function setupCanvas() {
         if (!e.buttons) return;
         lastMousePosition = currentMousePosition
         currentMousePosition = pos(e)
-        if(lastMousePosition && currentMousePosition){
+        if (lastMousePosition && currentMousePosition){
             draw(lastMousePosition, currentMousePosition, color, true);
             strokePool.push([lastMousePosition, currentMousePosition])
         }
@@ -212,10 +184,7 @@ function setupCanvas() {
 }
 
 function pos(e) {
-    return [
-        e.pageX - canvas.offsetLeft,
-        e.pageY - canvas.offsetTop
-    ]
+  return [e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop]
 }
 
 function setupShapePicker(){
