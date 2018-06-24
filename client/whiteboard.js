@@ -12,7 +12,7 @@ import { EventEmitter } from 'events'
 import func from './model'
 
 const events = new EventEmitter()
-import { strokeDb } from './fire/store';
+import { strokeDb } from './fire/store'
 
 export default events
 
@@ -52,8 +52,8 @@ export function draw(
 
 // State
 //// Stroke color
-let color;
-let shape;
+let color
+let shape
 //// Position tracking
 let currentMousePosition = {
   x: 0,
@@ -68,17 +68,14 @@ let lastMousePosition = {
 //// Color picker settings
 const colors = ['black', 'purple', 'red', 'green', 'orange', 'yellow', 'brown']
 
-const shapes = [
-    'circle',
-    'square'
-]
+const shapes = ['circle', 'square']
 
 function setup() {
   document.body.appendChild(canvas)
 
-    setupColorPicker()
-    setupShapePicker()
-    setupCanvas()
+  setupColorPicker()
+  setupShapePicker()
+  setupCanvas()
 }
 
 function setupColorPicker() {
@@ -143,75 +140,136 @@ function resize() {
 }
 
 function setupCanvas() {
-    // Set the size of the canvas and attach a listener
-    // to handle resizing.
-    resize()
-    window.addEventListener('resize', resize)
+  // Set the size of the canvas and attach a listener
+  // to handle resizing.
+  resize()
+  window.addEventListener('resize', resize)
 
-    window.addEventListener('mousedown', function (e) {
-
-        currentMousePosition = pos(e)
-    });
-
-    window.addEventListener('mousemove', function (e) {
-        console.log('buttons',e.buttons);
-        //Buttons equals 1 when left click is pressed, else 0
-        if (!e.buttons) return;
-        lastMousePosition = currentMousePosition
-        currentMousePosition = pos(e)
-        if (lastMousePosition && currentMousePosition){
-            draw(lastMousePosition, currentMousePosition, color, true);
-            strokePool.push([lastMousePosition, currentMousePosition])
-        }
-    });
-
-    window.addEventListener('mouseup', (e) => {
-        // console.log('Stroke has finished', strokePool);
-        if(e.target.tagName !== 'CANVAS') return
-        strokeDb.add({
-            stroke: JSON.stringify(strokePool),
-            shape
-        })
-        .catch(console.error)
-
-        strokePool = []
+  window.addEventListener('mousedown', function(e) {
+    console.log(e)
+    currentMousePosition = pos(e)
+  })
+  window.addEventListener('touchstart', function(e) {
+    console.log('touch started')
+    currentMousePosition = pos(e)
+    let touch = e.touches[0]
+    let mouseEvent = new MouseEvent('mousedown', {
+      clientX: touch.clientX,
+      clientY: touch.clientY
     })
+    window.dispatchEvent(mouseEvent)
+  })
+
+  window.addEventListener('mousemove', function(e) {
+    // console.log('buttons', e.buttons)
+    if (!e.buttons) return
+    lastMousePosition = currentMousePosition
+    currentMousePosition = pos(e)
+    if (lastMousePosition && currentMousePosition) {
+      draw(lastMousePosition, currentMousePosition, color, true)
+      strokePool.push([lastMousePosition, currentMousePosition])
+    }
+  })
+  window.addEventListener('touchmove', function(e) {
+    console.log('touch is moving')
+    if (!e.buttons) return
+    lastMousePosition = currentMousePosition
+    currentMousePosition = pos(e)
+    if (lastMousePosition && currentMousePosition) {
+      draw(lastMousePosition, currentMousePosition, color, true)
+      strokePool.push([lastMousePosition, currentMousePosition])
+    }
+  })
+
+  window.addEventListener('mouseup', e => {
+    // console.log('Stroke has finished', strokePool)
+    if (e.target.tagName !== 'CANVAS') return
+    // strokeDb
+    //   .add({
+    //     stroke: JSON.stringify(strokePool),
+    //     shape
+    //   })
+    //   .catch(console.error)
+    strokePool = []
+  })
+
+  window.addEventListener('touchend', e => {
+    console.log('touch is up')
+    if (e.target.tagName !== 'CANVAS') return
+    strokeDb
+      .add({
+        stroke: JSON.stringify(strokePool),
+        shape
+      })
+      .catch(console.error)
+    strokePool = []
+  })
 }
+
+// Prevent scrolling when touching the canvas
+document.body.addEventListener(
+  'touchstart',
+  function(e) {
+    if (e.target == canvas) {
+      e.preventDefault()
+    }
+  },
+  false
+)
+document.body.addEventListener(
+  'touchend',
+  function(e) {
+    if (e.target == canvas) {
+      e.preventDefault()
+    }
+  },
+  false
+)
+document.body.addEventListener(
+  'touchmove',
+  function(e) {
+    if (e.target == canvas) {
+      e.preventDefault()
+    }
+  },
+  false
+)
 
 function pos(e) {
   return [e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop]
 }
 
-function setupShapePicker(){
-    const picker = document.createElement('div')
-    picker.classList.add('shape-selector')
+function setupShapePicker() {
+  const picker = document.createElement('div')
+  picker.classList.add('shape-selector')
 
-    shapes.map(shape => {
-        const marker = document.createElement('div')
-        const shapeLetter = document.createElement('h3')
-        shapeLetter.innerHTML = shape.slice(0,2);
-        shapeLetter.style.color = 'white'
-        shapeLetter.style.textAlign = 'center'
-        marker.appendChild(shapeLetter)
+  shapes
+    .map(shape => {
+      const marker = document.createElement('div')
+      const shapeLetter = document.createElement('h3')
+      shapeLetter.innerHTML = shape.slice(0, 2)
+      shapeLetter.style.color = 'white'
+      shapeLetter.style.textAlign = 'center'
+      marker.appendChild(shapeLetter)
 
-        marker.classList.add('marker');
-        marker.dataset.shape = shape
-        marker.style.background = 'black'
+      marker.classList.add('marker')
+      marker.dataset.shape = shape
+      marker.style.background = 'black'
 
-        return marker
+      return marker
     })
     .forEach(shape => picker.appendChild(shape))
 
-    picker.addEventListener('click', ({target}) => {
-        shape = target.dataset.shape
-        if (!shape) return
-        const current = picker.querySelector('.selected')
-        current && current.classList.remove('selected')
-        target.classList.add('selected')
-    })
+  picker.addEventListener('click', ({ target }) => {
+    shape = target.dataset.shape
+    if (!shape) return
+    const current = picker.querySelector('.selected')
+    current && current.classList.remove('selected')
+    target.classList.add('selected')
+  })
 
-    document.body.appendChild(picker)
-    picker.firstChild.click()
+  document.body.appendChild(picker)
+  picker.firstChild.click()
 }
 
 document.addEventListener('DOMContentLoaded', setup)
