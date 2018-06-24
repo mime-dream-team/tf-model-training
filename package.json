@@ -10,6 +10,7 @@
   "dependencies": {
     "@tensorflow/tfjs": "^0.11.7",
     "express": "^4.12.3",
+    "firebase": "^5.1.0",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {

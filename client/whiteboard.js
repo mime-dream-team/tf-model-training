@@ -13,6 +13,7 @@ import func from './model'
 import { generateDataSets } from './dataTransforms'
 
 const events = new EventEmitter()
+import { strokeDb } from './fire/store';
 
 export default events
 
@@ -136,32 +137,43 @@ function resize() {
 }
 
 function setupCanvas() {
-  // Set the size of the canvas and attach a listener
-  // to handle resizing.
-  resize()
-  window.addEventListener('resize', resize)
+    // Set the size of the canvas and attach a listener
+    // to handle resizing.
+    resize()
+    window.addEventListener('resize', resize)
 
-  window.addEventListener('mousedown', function(e) {
-    currentMousePosition = pos(e)
-  })
+    window.addEventListener('mousedown', function (e) {
 
-  window.addEventListener('mousemove', function(e) {
-    console.log('buttons', e.buttons)
-    //Buttons equals 1 when left click is pressed, else 0
-    if (!e.buttons) return
-    lastMousePosition = currentMousePosition
-    currentMousePosition = pos(e)
-    if (lastMousePosition && currentMousePosition) {
-      draw(lastMousePosition, currentMousePosition, color, true)
-      strokePool.push([lastMousePosition, currentMousePosition])
-    }
-  })
+        currentMousePosition = pos(e)
+    });
 
-  window.addEventListener('mouseup', e => {
-    let dataSet = generateDataSets(strokePool, 10)
-    console.log(dataSet)
-    strokePool = []
-  })
+    window.addEventListener('mousemove', function (e) {
+        console.log('buttons',e.buttons);
+        //Buttons equals 1 when left click is pressed, else 0
+        if (!e.buttons) return;
+        lastMousePosition = currentMousePosition
+        currentMousePosition = pos(e)
+        if (lastMousePosition && currentMousePosition){
+            draw(lastMousePosition, currentMousePosition, color, true);
+            strokePool.push([lastMousePosition, currentMousePosition])
+        }
+    });
+
+    window.addEventListener('mouseup', (e) => {
+        // console.log('Stroke has finished', strokePool);
+        let shape = "circle";
+        strokeDb.add({
+            stroke: JSON.stringify(strokePool),
+            shape
+        })
+        .catch(console.error)
+
+        generateDataSets(strokePool, 10).forEach(stroke => {
+            // console.log(...stroke);
+            stroke.forEach(sto => draw(...sto,'green'))
+        })
+        strokePool = []
+    })
 }
 
 function pos(e) {
