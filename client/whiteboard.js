@@ -53,7 +53,8 @@ export function draw(
 
 // State
 //// Stroke color
-let color
+let color;
+let shape;
 //// Position tracking
 let currentMousePosition = {
   x: 0,
@@ -68,11 +69,17 @@ let lastMousePosition = {
 //// Color picker settings
 const colors = ['black', 'purple', 'red', 'green', 'orange', 'yellow', 'brown']
 
+const shapes = [
+    'circle',
+    'square'
+]
+
 function setup() {
   document.body.appendChild(canvas)
 
-  setupColorPicker()
-  setupCanvas()
+    setupColorPicker()
+    setupShapePicker()
+    setupCanvas()
 }
 
 function setupColorPicker() {
@@ -161,7 +168,7 @@ function setupCanvas() {
 
     window.addEventListener('mouseup', (e) => {
         // console.log('Stroke has finished', strokePool);
-        let shape = "circle";
+        if(e.target.tagName !== 'CANVAS') return
         strokeDb.add({
             stroke: JSON.stringify(strokePool),
             shape
@@ -178,6 +185,38 @@ function setupCanvas() {
 
 function pos(e) {
   return [e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop]
+}
+
+function setupShapePicker(){
+    const picker = document.createElement('div')
+    picker.classList.add('shape-selector')
+
+    shapes.map(shape => {
+        const marker = document.createElement('div')
+        const shapeLetter = document.createElement('h3')
+        shapeLetter.innerHTML = shape.slice(0,2);
+        shapeLetter.style.color = 'white'
+        shapeLetter.style.textAlign = 'center'
+        marker.appendChild(shapeLetter)
+
+        marker.classList.add('marker');
+        marker.dataset.shape = shape
+        marker.style.background = 'black'
+
+        return marker
+    })
+    .forEach(shape => picker.appendChild(shape))
+
+    picker.addEventListener('click', ({target}) => {
+        shape = target.dataset.shape
+        if (!shape) return
+        const current = picker.querySelector('.selected')
+        current && current.classList.remove('selected')
+        target.classList.add('selected')
+    })
+
+    document.body.appendChild(picker)
+    picker.firstChild.click()
 }
 
 document.addEventListener('DOMContentLoaded', setup)
