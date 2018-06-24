@@ -10,7 +10,6 @@
 
 import { EventEmitter } from 'events'
 import func from './model'
-import { generateDataSets } from './dataTransforms'
 
 const events = new EventEmitter()
 import { strokeDb } from './fire/store';
@@ -175,10 +174,6 @@ function setupCanvas() {
         })
         .catch(console.error)
 
-        generateDataSets(strokePool, 10).forEach(stroke => {
-            // console.log(...stroke);
-            stroke.forEach(sto => draw(...sto,'green'))
-        })
         strokePool = []
     })
 }
