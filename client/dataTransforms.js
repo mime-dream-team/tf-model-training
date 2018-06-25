@@ -2,11 +2,13 @@ import { input } from '@tensorflow/tfjs'
 
 export function processTrainingData(allData, numBuckets = 10){
 	let trainingDataPoints = []
-	let outputDataPoints = []
+  let outputDataPoints = []
+  
 	allData.forEach(shape => {
 		// Only evaluate stroke if it's long enough
 		if (shape.stroke.length > 40){
-			let stroke = JSON.parse(shape.stroke)
+      let stroke = JSON.parse(shape.stroke)
+      console.log(removeSimilarDataPoints(stroke))
 			let dataSets = generateDataSets(stroke, numBuckets)
 			trainingDataPoints.push(...dataSets)
 			// For each of the stroke permutations, create an outputDataObject
@@ -15,8 +17,34 @@ export function processTrainingData(allData, numBuckets = 10){
 				outputDataPoints.push(outputDataObject)
 			})
 		}
-	})
+  })
+  // console.log(trainingDataPoints)
 	return { trainingDataPoints, outputDataPoints }
+}
+
+function removeSimilarDataPoints(xYs){
+    let xS = [];
+    let yS = [];
+    xYs.forEach(co => {
+      let start = co[0]
+      let end = co[1]
+
+      xS.push(start[0], end[0])
+      yS.push(start[1], end[1])
+    })
+
+    let standX = standardDeviation(xS)
+    let standY = standardDeviation(yS)
+
+    let previous = xYs[0];
+    // console.log(previous)
+    let further = xYs.filter(coords => {
+      if(Math.abs(coords[1][0] - previous[1][0]) > standX) return false;
+      if(Math.abs(coords[1][1] - previous[1][1]) > standY) return false;
+      return true
+    })
+
+    return further;
 }
 
 function createOutputData(shape) {
@@ -65,4 +93,28 @@ function reduceDataPoints(startIdx, inputArr, dataGap, numBuckets) {
     pointer += dataGap
   }
   return dataSample
+}
+
+function standardDeviation(values){
+  var avg = average(values);
+  
+  var squareDiffs = values.map(function(value){
+    var diff = value - avg;
+    var sqrDiff = diff * diff;
+    return sqrDiff;
+  });
+  
+  var avgSquareDiff = average(squareDiffs);
+
+  var stdDev = Math.sqrt(avgSquareDiff);
+  return stdDev;
+}
+
+function average(data){
+  var sum = data.reduce(function(sum, value){
+    return sum + value;
+  }, 0);
+
+  var avg = sum / data.length;
+  return avg;
 }

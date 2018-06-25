@@ -21,7 +21,7 @@ const testingDataCircleTensor = tf.tensor2d(testingDataCircle)
 const testingDataSquare = processTrainingData(realSquare).trainingDataPoints
 const testingDataSquareTensor = tf.tensor2d(testingDataSquare)
 
-const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare])
+// const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare])
 
 const runTraining = () => {
 	strokeDb.get()
@@ -33,19 +33,19 @@ const runTraining = () => {
 		.then(strokeData => {
 			return processTrainingData(strokeData)
 		})
-		.then(trainingObject => {
-			const { trainingDataPoints, outputDataPoints } = trainingObject
-			const trainingData = tf.tensor2d(trainingDataPoints)
-			const outputData = tf.tensor2d(outputDataPoints)
-			const startTime = Date.now()
-			// console.log(testingData[0], 'SECOND', testingData[10])
-			model.fit(trainingData, outputData, {epochs: 300})
-				.then(history => {
-						console.log(history)
-						console.log(Date.now() - startTime)	
-						model.predict(testingDataCircleTensor).print()
-				})
-		})
+	// 	.then(trainingObject => {
+	// 		const { trainingDataPoints, outputDataPoints } = trainingObject
+	// 		const trainingData = tf.tensor2d(trainingDataPoints)
+	// 		const outputData = tf.tensor2d(outputDataPoints)
+	// 		const startTime = Date.now()
+	// 		// console.log(testingData[0], 'SECOND', testingData[10])
+	// 		model.fit(trainingData, outputData, {epochs: 300})
+	// 			.then(history => {
+	// 					console.log(history)
+	// 					console.log(Date.now() - startTime)	
+	// 					// model.predict(testingDataCircleTensor).print()
+	// 			})
+	// 	})
 }
 
 export default runTraining

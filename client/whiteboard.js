@@ -171,11 +171,13 @@ function setupCanvas() {
     window.addEventListener('mouseup', (e) => {
         // console.log('Stroke has finished', strokePool);
         if(e.target.tagName !== 'CANVAS') return
-        strokeDb.add({
-            stroke: JSON.stringify(strokePool),
-            shape
-        })
-        .catch(console.error)
+        const strokeObj = JSON.stringify(strokePool)
+        console.log(strokeObj)
+        // strokeDb.add({
+        //     stroke: JSON.stringify(strokePool),
+        //     shape
+        // })
+        // .catch(console.error)
 
         strokePool = []
     })
