@@ -1,7 +1,6 @@
 import * as tf from '@tensorflow/tfjs'
 import model from './model'
-import trainingCircles from '../fire/circles'
-import trainingSquares from '../fire/squares'
+import { trainingCircles, trainingSquares } from '../fire/circlesAndSquares'
 
 const runTraining = () => {
   const testingCircle = [
@@ -13,9 +12,10 @@ const runTraining = () => {
   const trainingDataArr = []
   const outputDataArray = []
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 150; i++) {
     trainingDataArr.push(trainingCircles[i], trainingSquares[i])
     outputDataArray.push([1, 0], [0, 1])
+    //circle probability for first element, square for second element
   }
   const startTime = Date.now()
   const testingDataTensor = tf.tensor2d([testingCircle, testingSquare])
@@ -23,7 +23,7 @@ const runTraining = () => {
   const outputDataTensor = tf.tensor2d(outputDataArray)
 
   model
-    .fit(trainingDataTensor, outputDataTensor, { epochs: 300 })
+    .fit(trainingDataTensor, outputDataTensor, { epochs: 100 })
     .then(history => {
       console.log(history)
       console.log(Date.now() - startTime)
