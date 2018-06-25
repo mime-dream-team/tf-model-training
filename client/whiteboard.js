@@ -192,8 +192,9 @@ function setupCanvas() {
   window.addEventListener(
     'touchend',
     e => {
-      // console.log(strokePool, shape)
+      console.log(strokePool, shape)
       if (e.target.tagName !== 'CANVAS') return
+      if (strokePool.length && shape) console.log('both conditions met')
       // strokeDb
       //   .add({
       //     stroke: JSON.stringify(strokePool),
@@ -262,6 +263,20 @@ function setupShapePicker() {
     target.classList.add('selected')
   })
 
+  picker.addEventListener(
+    'touchend',
+    ({ target }) => {
+      shape = target.dataset.shape
+      if (!shape) return
+      else {
+        const current = picker.querySelector('.selected')
+        current && current.classList.remove('selected')
+        target.classList.add('selected')
+        console.log(shape)
+      }
+    },
+    false
+  )
   document.body.appendChild(picker)
   picker.firstChild.click()
 }
