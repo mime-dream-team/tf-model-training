@@ -9,7 +9,7 @@
  */
 
 import { EventEmitter } from 'events'
-import func from './model'
+import func from './model/model'
 
 const events = new EventEmitter()
 import { strokeDb } from './fire/store'
