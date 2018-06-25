@@ -264,7 +264,7 @@ function setupShapePicker() {
   })
 
   picker.addEventListener(
-    'touchend',
+    'touchstart',
     ({ target }) => {
       shape = target.dataset.shape
       if (!shape) return
