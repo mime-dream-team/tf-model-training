@@ -20,35 +20,41 @@ const realSquare = [{type: 'square', stroke: '[[[205,123],[206,123]],[[206,123],
 // const testingDataSquareTensor = tf.tensor2d(testingDataSquare)
 
 const runTraining = () => {
-	const testingDataCircle = processTrainingData(realCircle).trainingDataPoints
-	const testingDataSquare = processTrainingData(realSquare).trainingDataPoints
-	const testingDataTensor = tf.tensor2d([testingDataSquare[0], testingDataCircle[0]])
-	console.log('hellsldkafkasnd')
+	const testingDataCircle = new Array(20).fill(1)
+	console.log(testingDataCircle)
+	const testingDataSquare = new Array(20).fill(0)
+	console.log(testingDataSquare)
+	const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare],[1,20])
 
 	strokeDb.get()
 		.then(querySnapshot => {
 			const strokeData = []
-			const circles = []
-			const squares = []
-			querySnapshot.forEach(stroke => {
-				let shape = stroke.data()
-				if(shape.shape === 'circle' && circles.length <= 150) {
-					circles.push(shape); 
-				}else if(shape.shape === 'square' && squares.length <= 150){
-					squares.push(shape);
-				}
-			})
+			const outputData = []
+			// const circles = []
+			// const squares = []
+			// querySnapshot.forEach(stroke => {
+			// 	let shape = stroke.data()
+			// 	if(shape.shape === 'circle' && circles.length <= 150) {
+			// 		circles.push(shape); 
+			// 	}else if(shape.shape === 'square' && squares.length <= 150){
+			// 		squares.push(shape);
+			// 	}
+			// })
 
 			for(let i = 0; i < 150; i++){
-				strokeData.push(circles[i])
-				strokeData.push(squares[i])
+				strokeData.push(new Array(20).fill(1))
+				outputData.push('circle')
+				strokeData.push(new Array(20).fill(0))
+				outputData.push('square')
 			}
-			return strokeData
+			return {strokeData,outputData}
 		})
 		.then(strokeData => {
-			return processTrainingData(strokeData)
+			// return processTrainingData(strokeData)
+			return {trainingDataPoints: strokeData.strokeData, outputDataPoints: strokeData.outputData}
 		})
 		.then(trainingObject => {
+			console.log(trainingObject)
 			const { trainingDataPoints, outputDataPoints } = trainingObject
 			const trainingData = tf.tensor2d(trainingDataPoints)
 			const outputData = tf.tensor2d(outputDataPoints)
