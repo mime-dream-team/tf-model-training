@@ -24,7 +24,7 @@ const runTraining = () => {
 	console.log(testingDataCircle)
 	const testingDataSquare = new Array(20).fill(0)
 	console.log(testingDataSquare)
-	const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare],[1,20])
+	const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare])
 
 	strokeDb.get()
 		.then(querySnapshot => {
@@ -43,9 +43,9 @@ const runTraining = () => {
 
 			for(let i = 0; i < 150; i++){
 				strokeData.push(new Array(20).fill(1))
-				outputData.push('circle')
+				outputData.push([1,0])
 				strokeData.push(new Array(20).fill(0))
-				outputData.push('square')
+				outputData.push([0,1])
 			}
 			return {strokeData,outputData}
 		})
@@ -60,11 +60,11 @@ const runTraining = () => {
 			const outputData = tf.tensor2d(outputDataPoints)
 			const startTime = Date.now()
 			// console.log(testingData[0], 'SECOND', testingData[10])
-			model.fit(trainingData, outputData, {epochs: 100})
+			model.fit(trainingData, outputData, {epochs: 200})
 				.then(history => {
-						console.log(history)
-						console.log(Date.now() - startTime)	
-						model.predict(testingDataTensor).print()
+					console.log(history)
+					console.log(Date.now() - startTime)	
+					model.predict(testingDataTensor).print()
 				})
 		})
 }
