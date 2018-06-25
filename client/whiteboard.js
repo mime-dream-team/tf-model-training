@@ -12,12 +12,13 @@ import { EventEmitter } from 'events'
 
 const events = new EventEmitter()
 import { strokeDb } from './fire/store';
+import { processTrainingData } from './dataTransforms'
 
 export default events
 
 // Testing the training functions
 import runTraining from './model/training'
-console.log(runTraining())
+runTraining()
 
 //// Canvas setup
 const canvas = document.createElement('canvas')
@@ -173,6 +174,12 @@ function setupCanvas() {
         if(e.target.tagName !== 'CANVAS') return
         const strokeObj = JSON.stringify(strokePool)
         console.log(strokeObj)
+        // processTrainingData([{stroke: strokeObj, shape: 'circle'}]).trainingDataPoints[0]
+        //   .forEach(point => {
+        //     console.log(point)
+        //     draw(...point, 'green')
+        //   })
+        // console.log(strokeObj)
         // strokeDb.add({
         //     stroke: JSON.stringify(strokePool),
         //     shape

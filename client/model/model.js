@@ -13,12 +13,12 @@ model.add(tf.layers.dense({
 model.add(tf.layers.dense({
 	inputShape: [21],
 	activation: 'sigmoid',
-	units: 5
+	units: 2
 }))
 
 model.add(tf.layers.dense({
 	activation: 'sigmoid',
-	units: 5
+	units: 2
 }))
 
 model.compile({

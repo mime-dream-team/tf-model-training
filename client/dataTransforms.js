@@ -8,14 +8,17 @@ export function processTrainingData(allData, numBuckets = 10){
 		// Only evaluate stroke if it's long enough
 		if (shape.stroke.length > 40){
       let stroke = JSON.parse(shape.stroke)
-      console.log(removeSimilarDataPoints(stroke))
-			let dataSets = generateDataSets(stroke, numBuckets)
-			trainingDataPoints.push(...dataSets)
+      // removeSimilarDataPoints(stroke)
+			let dataSets = generateDataSets(removeSimilarDataPoints(stroke), numBuckets)
+      // trainingDataPoints.push(...dataSets)
+      trainingDataPoints.push(dataSets[0])
 			// For each of the stroke permutations, create an outputDataObject
-			dataSets.forEach(() => {
-				let outputDataObject = createOutputData(shape.shape)
-				outputDataPoints.push(outputDataObject)
-			})
+			// dataSets.forEach(() => {
+			// 	let outputDataObject = createOutputData(shape.shape)
+			// 	outputDataPoints.push(outputDataObject)
+      // })
+      let outputDataObject = createOutputData(shape.shape)
+      outputDataPoints.push(outputDataObject)
 		}
   })
   // console.log(trainingDataPoints)
@@ -35,12 +38,19 @@ function removeSimilarDataPoints(xYs){
 
     let standX = standardDeviation(xS)
     let standY = standardDeviation(yS)
-
     let previous = xYs[0];
     // console.log(previous)
     let further = xYs.filter(coords => {
-      if(Math.abs(coords[1][0] - previous[1][0]) > standX) return false;
-      if(Math.abs(coords[1][1] - previous[1][1]) > standY) return false;
+      // console.log(coords[1][0] - previous[1][0], coords[1][1] - previous[1][1])
+      if(Math.abs(coords[1][0] - previous[1][0]) > standX) {
+        previous = coords
+        return false
+      }
+      if(Math.abs(coords[1][1] - previous[1][1]) > standY) {
+        previous = coords
+        return false
+      }
+      previous = coords
       return true
     })
 
@@ -51,9 +61,9 @@ function createOutputData(shape) {
 	return [
 		shape === 'circle' ? 1 : 0,
 		shape === 'square' ? 1 : 0,
-		shape === 'rectangle' ? 1 : 0,
-		shape === 'triangle' ? 1 : 0,
-		shape === 'line' ? 1 : 0
+		// shape === 'rectangle' ? 1 : 0,
+		// shape === 'triangle' ? 1 : 0,
+		// shape === 'line' ? 1 : 0
 	]
 }
 
