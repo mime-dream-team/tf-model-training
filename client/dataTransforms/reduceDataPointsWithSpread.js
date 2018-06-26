@@ -1,3 +1,5 @@
+import { mapStandardDeviation } from './removeSimilarDataPoints'
+// For testing purposes, we've added the standard deviation function here
 export default function reduceDataPointsWithSpread(
   startIdx,
   inputArr,
@@ -12,5 +14,5 @@ export default function reduceDataPointsWithSpread(
     dataSample.push(...currentArr[1])
     pointer += dataGap
   }
-  return dataSample
+  return mapStandardDeviation(dataSample)
 }
