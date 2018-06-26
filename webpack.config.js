@@ -4,9 +4,11 @@
   only a partial bundle will be served
 */
 
+require('babel-polyfill')
+
 module.exports = {
   /* starting point for our frontend JavaScript (place to enter when bundling) */
-  entry: './client/index.js',
+  entry: ['babel-polyfill', './client/index.js'],
   /* where to output our newly bundled file */
   output: {
     path: __dirname + '/public', // the ABSOLUTE path for the directory
