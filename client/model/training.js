@@ -7,7 +7,7 @@ import {
   // trainingSquares,
   // actualCircle,
   // actualSquare
-} from '../fire/circlesAndSquares'
+} from '../fire/shapes'
 
 const runTraining = () => {
   // const testingCircle = actualCircle
