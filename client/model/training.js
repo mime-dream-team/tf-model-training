@@ -1,11 +1,21 @@
 import * as tf from '@tensorflow/tfjs'
 import model from './model'
-import { trainingCircles, trainingSquares } from '../fire/circlesAndSquares'
+import {
+  shapeTrainingDataPoints,
+  shapeCorrespondingOutputData
+  // trainingCircles,
+  // trainingSquares,
+  // actualCircle,
+  // actualSquare
+} from '../fire/circlesAndSquares'
 
 const runTraining = () => {
+  // const testingCircle = actualCircle
   const testingCircle = [
     /*insert an actual circle array here, 20 items long*/
   ]
+  // const testingSquare = actualSquare
+  // console.log(testingCircle, testingSquare)
   const testingSquare = [
     /*insert an actual square array here, 20 items long*/
   ]

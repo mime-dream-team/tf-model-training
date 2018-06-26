@@ -1,39 +1,54 @@
 import { strokeDb } from './store'
+import { processTrainingData } from '../dataTransforms'
+import dummyShapeData from './dummyShapeData'
 
-import {
-  createOutputData,
-  generateDataSets,
-  processTrainingData,
-  reduceDataPoints,
-  reduceDataPointsWithSpread,
-  removeSimilarDataPoints,
-  scaleToStandardSize,
-  standardDeviation
-} from '../dataTransforms'
-
-//comes back as an array of objects that have a shape property and a stoke
 const fetchRawStrokeData = async () => {
-  //const querySnapshot = await strokeDb.get()
+  // const querySnapshot = await strokeDb.get()
   //DO NOT uncomment the line above until we are actually ready to test, exceeded firebase read quota (18¢)
-  let rawCircleArrays = []
-  let rawSquareArrays = []
-  querySnapshot.forEach(strokeObject => {
-    if (strokeObject.shape === 'circle') {
-      rawCircleArrays.push(strokeObject.data())
-    }
-    if (strokeObject.shape === 'square') {
-      rawSquareArrays.push(strokeObject.data())
+  let allShapesRaw = []
+  dummyShapeData.forEach(strokeObject => {
+    if (strokeObject.stroke.length > 40) {
+      allShapesRaw.push(strokeObject.data())
     }
   })
-  rawCircleArrays.map(circleObject => JSON.parse(circleObject.stroke))
-  rawSquareArrays.map(squareObject => JSON.parse(squareObject.stroke))
-  return { rawCircleArrays, rawSquareArrays }
+  // querySnapshot.forEach(strokeObject => {
+  //   if (strokeObject.stroke.length > 40) {
+  //     allShapesRaw.push(strokeObject.data())
+  //   }
+  // })
+  let allShapesParsed = allShapesRaw.map(shapeObject => {
+    return { shape: shapeObject.shape, stroke: JSON.parse(shapeObject.stroke) }
+  })
+  return { allShapesParsed }
 }
-//1-remove junt arrays no longer than 40
 
-//here we do other things to transform the data
+const {
+  shapeTrainingDataPoints,
+  shapeCorrespondingOutputData
+} = processTrainingData(fetchRawStrokeData)
 
-const trainingCircles = []
-const trainingSquares = []
-//array of 100+ circle arrays each with length 20
-export default { trainingCircles, trainingSquares }
+// let trainingCircles = []
+// let trainingSquares = []
+
+// for (let i = 0; i < shapeTrainingDataPoints.length; i++) {
+//   while (trainingCircles.length < 101 && trainingSquares.length < 101) {
+//     if (shapeCorrespondingOutputData[i] === [1, 0]) {
+//       trainingCircles.push(shapeTrainingDataPoints[i])
+//     }
+//     if (shapeCorrespondingOutputData[i] === [0, 1]) {
+//       trainingSquares.push(shapeTrainingDataPoints[i])
+//     }
+//   }
+// }
+
+// let actualCircle = trainingCircles.pop()
+// let actualSquare = trainingSquares.pop()
+
+export default {
+  shapeTrainingDataPoints,
+  shapeCorrespondingOutputData
+  // trainingCircles,
+  // trainingSquares,
+  // actualCircle,
+  // actualSquare
+}
