@@ -13,6 +13,9 @@ import func from './model/model'
 
 const events = new EventEmitter()
 import { strokeDb } from './fire/store'
+import runTraining from './model/training'
+
+runTraining()
 
 export default events
 

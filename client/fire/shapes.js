@@ -2,30 +2,28 @@ import { strokeDb } from './store'
 import { processTrainingData } from '../dataTransforms'
 import dummyShapeData from './dummyShapeData'
 
-const fetchRawStrokeData = async () => {
-  // const querySnapshot = await strokeDb.get()
-  //DO NOT uncomment the line above until we are actually ready to test, exceeded firebase read quota (18¢)
-  let allShapesRaw = []
-  dummyShapeData.forEach(strokeObject => {
-    if (strokeObject.stroke.length > 40) {
-      allShapesRaw.push(strokeObject.data())
-    }
-  })
-  // querySnapshot.forEach(strokeObject => {
-  //   if (strokeObject.stroke.length > 40) {
-  //     allShapesRaw.push(strokeObject.data())
-  //   }
-  // })
-  let allShapesParsed = allShapesRaw.map(shapeObject => {
-    return { shape: shapeObject.shape, stroke: JSON.parse(shapeObject.stroke) }
-  })
-  return { allShapesParsed }
+const fetchRawStrokeData = () => {
+	let allShapesParsed = []
+	return strokeDb.get()
+		.then(querySnapshot => {
+			let allShapesRaw = []
+			querySnapshot.forEach(strokeObject => {
+				const strokeData = strokeObject.data()
+				if (strokeData.stroke.length > 40) {
+					allShapesRaw.push(strokeData)
+				}
+			})
+			allShapesParsed = allShapesRaw.map(shapeObject => {
+				return { shape: shapeObject.shape, stroke: JSON.parse(shapeObject.stroke) }
+			})
+			return allShapesParsed
+		})
+		.then(allShapesParsed => {
+			return processTrainingData(allShapesParsed)
+		})
 }
 
-const {
-  shapeTrainingDataPoints,
-  shapeCorrespondingOutputData
-} = processTrainingData(fetchRawStrokeData)
+export default fetchRawStrokeData
 
 // let trainingCircles = []
 // let trainingSquares = []
@@ -44,11 +42,3 @@ const {
 // let actualCircle = trainingCircles.pop()
 // let actualSquare = trainingSquares.pop()
 
-export default {
-  shapeTrainingDataPoints,
-  shapeCorrespondingOutputData
-  // trainingCircles,
-  // trainingSquares,
-  // actualCircle,
-  // actualSquare
-}
