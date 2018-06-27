@@ -53,3 +53,26 @@ function average(data) {
   var avg = sum / data.length
   return avg
 }
+
+// Input is a spread array of alternating x, y values like [x, y, x, y, x, y, x, y]
+export function mapStandardDeviation(strokes) {
+	let xValues = []
+	let yValues = []
+
+	// Create arrays of x and y values from the input array
+	for (let i = 0; i < strokes.length; i++){
+		if (i % 2) yValues.push(strokes[i])
+		else xValues.push(strokes[i])
+	}
+
+	let xAverage = average(xValues)
+	let yAverage = average(yValues)
+	let deviations = []
+
+	for (let i = 0; i < xValues.length; i++) {
+		deviations.push(+(xValues[i] - xAverage).toFixed(2))
+		deviations.push(+(yValues[i] - yAverage).toFixed(2))
+	}
+
+	return deviations
+}

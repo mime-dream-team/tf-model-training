@@ -14,7 +14,6 @@ const testingDataSquare = processTrainingData(realSquare).shapeTrainingDataPoint
 const runTraining = () => {
 	fetchRawStrokeData()
 		.then(({ shapeTrainingDataPoints, shapeCorrespondingOutputData }) => {
-
 			const trainingDataTensor = tf.tensor2d(shapeTrainingDataPoints)
 			const outputDataTensor = tf.tensor2d(shapeCorrespondingOutputData)
 			const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare])
