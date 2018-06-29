@@ -25,6 +25,7 @@ const runTraining = () => {
 					console.log(history)
 					console.log(Date.now() - startTime)
 					model.predict(testingDataTensor).print()
+					model.save('downloads://shape-recognition')
 				})
 		})
 }
