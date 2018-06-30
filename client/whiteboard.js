@@ -71,7 +71,7 @@ let lastMousePosition = {
 //// Color picker settings
 const colors = ['black', 'purple', 'red', 'green', 'orange', 'yellow', 'brown']
 
-const shapes = ['circle', 'square']
+const shapes = ['circle', 'square', 'triangle', 'line' ]
 
 function setup() {
   document.body.appendChild(canvas)

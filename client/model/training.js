@@ -7,16 +7,22 @@ const realCircle = [{type:'circle', stroke: [[[350, 206], [350, 205]], [[350, 20
 
 const realSquare = [{type: 'square', stroke: [[[253, 693], [253, 694]], [[253, 694], [253, 694]], [[253, 694], [253, 700]], [[253, 700], [253, 706]], [[253, 706], [253, 714]], [[253, 714], [253, 724]], [[253, 724], [253, 736]], [[253, 736], [253, 746]], [[253, 746], [253, 751]], [[253, 751], [253, 756]], [[253, 756], [253, 759]], [[253, 759], [253, 760]], [[253, 760], [253, 761]], [[253, 761], [253, 761]], [[253, 761], [254, 761]], [[254, 761], [254, 761]], [[254, 761], [255, 761]], [[255, 761], [256, 760]], [[256, 760], [256, 760]], [[256, 760], [258, 759]], [[258, 759], [260, 759]], [[260, 759], [264, 759]], [[264, 759], [270, 759]], [[270, 759], [277, 759]], [[277, 759], [286, 759]], [[286, 759], [294, 759]], [[294, 759], [302, 760]], [[302, 760], [307, 760]], [[307, 760], [312, 760]], [[312, 760], [315, 760]], [[315, 760], [319, 760]], [[319, 760], [321, 760]], [[321, 760], [323, 760]], [[323, 760], [325, 760]], [[325, 760], [327, 760]], [[327, 760], [328, 760]], [[328, 760], [330, 760]], [[330, 760], [331, 760]], [[331, 760], [332, 759]], [[332, 759], [332, 758]], [[332, 758], [333, 757]], [[333, 757], [333, 755]], [[333, 755], [333, 753]], [[333, 753], [333, 750]], [[333, 750], [333, 746]], [[333, 746], [333, 742]], [[333, 742], [333, 738]], [[333, 738], [332, 731]], [[332, 731], [332, 724]], [[332, 724], [332, 713]], [[332, 713], [332, 706]], [[332, 706], [332, 702]], [[332, 702], [332, 699]], [[332, 699], [332, 698]], [[332, 698], [332, 697]], [[332, 697], [332, 696]], [[332, 696], [332, 696]], [[332, 696], [332, 696]], [[332, 696], [332, 695]], [[332, 695], [332, 695]], [[332, 695], [331, 695]], [[331, 695], [330, 695]], [[330, 695], [327, 695]], [[327, 695], [325, 695]], [[325, 695], [323, 695]], [[323, 695], [320, 694]], [[320, 694], [315, 694]], [[315, 694], [309, 694]], [[309, 694], [303, 693]], [[303, 693], [296, 693]], [[296, 693], [289, 692]], [[289, 692], [282, 691]], [[282, 691], [272, 690]], [[272, 690], [267, 690]], [[267, 690], [261, 689]], [[261, 689], [256, 689]], [[256, 689], [253, 689]], [[253, 689], [250, 689]], [[250, 689], [248, 688]], [[248, 688], [248, 688]], [[248, 688], [248, 688]]]}]
 
-const testingDataCircle = processTrainingData(realCircle).shapeTrainingDataPoints[0]
+const realTriangle = []
+const realLine = []
 
+
+const testingDataCircle = processTrainingData(realCircle).shapeTrainingDataPoints[0]
 const testingDataSquare = processTrainingData(realSquare).shapeTrainingDataPoints[0]
+const testingDataTriangle = processTrainingData(realTriangle).shapeTrainingDataPoints[0]
+const testingDataLine = processTrainingData(realLine).shapeTrainingDataPoints[0]
+
 
 const runTraining = () => {
 	fetchRawStrokeData()
 		.then(({ shapeTrainingDataPoints, shapeCorrespondingOutputData }) => {
 			const trainingDataTensor = tf.tensor2d(shapeTrainingDataPoints)
 			const outputDataTensor = tf.tensor2d(shapeCorrespondingOutputData)
-			const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare])
+			const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare, testingDataTriangle, testingDataLine])
 
 			const startTime = Date.now()
 			model
