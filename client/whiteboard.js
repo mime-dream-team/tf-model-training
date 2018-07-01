@@ -12,7 +12,7 @@ import { EventEmitter } from 'events'
 import func from './model/model'
 
 const events = new EventEmitter()
-import { strokeDb } from './fire/store'
+import { strokeDb, newStrokeDb } from './fire/store'
 import runTraining from './model/training'
 
 // runTraining()
@@ -183,12 +183,23 @@ function setupCanvas() {
 	window.addEventListener('mouseup', e => {
 		console.log(strokePool, shape)
 		if (e.target.tagName !== 'CANVAS') return
-		// strokeDb
-		//   .add({
-		//     stroke: JSON.stringify(strokePool),
-		//     shape
-		//   })
-		//   .catch(console.error)
+		if (strokePool.length && shape){ 
+			if(shape === 'circle' || shape === 'square'){
+				strokeDb
+				  .add({
+					stroke: JSON.stringify(strokePool),
+					shape
+				  })
+				  .catch(console.error)
+			}else if(shape === 'triangle' || shape === 'line'){
+				newStrokeDb
+				  .add({
+					stroke: JSON.stringify(strokePool),
+					shape
+				  })
+				  .catch(console.error)
+			}
+		}
 		strokePool = []
 	})
 
@@ -197,13 +208,23 @@ function setupCanvas() {
 		e => {
 			console.log(strokePool, shape)
 			if (e.target.tagName !== 'CANVAS') return
-			if (strokePool.length && shape) console.log('both conditions met')
-			// strokeDb
-			//   .add({
-			//     stroke: JSON.stringify(strokePool),
-			//     shape
-			//   })
-			//   .catch(console.error)
+			if (strokePool.length && shape){ 
+				if(shape === 'circle' || shape === 'square'){
+					strokeDb
+					  .add({
+						stroke: JSON.stringify(strokePool),
+						shape
+					  })
+					  .catch(console.error)
+				}else if(shape === 'triangle' || shape === 'line'){
+					newStrokeDb
+					  .add({
+						stroke: JSON.stringify(strokePool),
+						shape
+					  })
+					  .catch(console.error)
+				}
+			}
 			strokePool = []
 		},
 		false

@@ -16,14 +16,14 @@ model.add(
   tf.layers.dense({
     inputShape: [21],
     activation: 'sigmoid',
-    units: 2
+    units: 4
   })
 )
 
 model.add(
   tf.layers.dense({
     activation: 'sigmoid',
-    units: 2
+    units: 4
   })
 )
 
