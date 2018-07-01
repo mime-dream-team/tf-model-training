@@ -4,6 +4,6 @@ export default function createOutputData(shape) {
     shape === 'square' ? 1 : 0,
     // shape === 'rectangle' ? 1 : 0,
     shape === 'triangle' ? 1 : 0,
-    shape === 'line' ? 1 : 0
+    // shape === 'line' ? 1 : 0
   ]
 }

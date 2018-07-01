@@ -15,7 +15,7 @@ const events = new EventEmitter()
 import { strokeDb, newStrokeDb } from './fire/store'
 import runTraining from './model/training'
 
-// runTraining()
+runTraining()
 
 export default events
 
@@ -181,7 +181,7 @@ function setupCanvas() {
 	)
 
 	window.addEventListener('mouseup', e => {
-		console.log(strokePool, shape)
+		console.log(JSON.stringify(strokePool), shape)
 		if (e.target.tagName !== 'CANVAS') return
 		if (strokePool.length && shape){ 
 			if(shape === 'circle' || shape === 'square'){
