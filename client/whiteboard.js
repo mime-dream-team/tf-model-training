@@ -1,21 +1,11 @@
 'use strict'
-
-/**
- * Creates a whiteboard on the page that the user can scribble on.
- *
- * Exports:
- *   - default draw(from, to, color, shouldBroadcast)
- *   - events: an EventEmitter that emits `draw` events.
- */
-
 import { EventEmitter } from 'events'
-import func from './model/model'
-
 const events = new EventEmitter()
-import { strokeDb, newStrokeDb } from './fire/store'
+import { circlesDb, squaresDb, trianglesDb, linesDb } from './fire/store'
 import runTraining from './model/training'
 
-runTraining()
+// refactored accordingly to run training later
+// runTraining()
 
 export default events
 
@@ -84,14 +74,14 @@ function setupColorPicker() {
 	const picker = document.createElement('div')
 	picker.classList.add('color-selector')
 	colors
-		.map(color => {
+		.map((color) => {
 			const marker = document.createElement('div')
 			marker.classList.add('marker')
 			marker.dataset.color = color
 			marker.style.backgroundColor = color
 			return marker
 		})
-		.forEach(color => picker.appendChild(color))
+		.forEach((color) => picker.appendChild(color))
 
 	picker.addEventListener('click', ({ target }) => {
 		color = target.dataset.color
@@ -180,52 +170,98 @@ function setupCanvas() {
 		false
 	)
 
-	window.addEventListener('mouseup', e => {
+	window.addEventListener('mouseup', (e) => {
 		console.log(JSON.stringify(strokePool), shape)
 		if (e.target.tagName !== 'CANVAS') return
-		if (strokePool.length && shape){ 
-			if(shape === 'circle' || shape === 'square'){
-				strokeDb
-				  .add({
-					stroke: JSON.stringify(strokePool),
-					shape
-				  })
-				  .catch(console.error)
-			}else if(shape === 'triangle' || shape === 'line'){
-				newStrokeDb
-				  .add({
-					stroke: JSON.stringify(strokePool),
-					shape
-				  })
-				  .catch(console.error)
+		if (strokePool.length && shape) {
+			switch (shape) {
+				case 'circle': {
+					circlesDb
+						.add({
+							stroke: JSON.stringify(strokePool),
+							shape
+						})
+						.catch(console.error)
+					break
+				}
+				case 'square': {
+					squaresDb
+						.add({
+							stroke: JSON.stringify(strokePool),
+							shape
+						})
+						.catch(console.error)
+					break
+				}
+				case 'triangle': {
+					trianglesDb
+						.add({
+							stroke: JSON.stringify(strokePool),
+							shape
+						})
+						.catch(console.error)
+					break
+				}
+				case 'line': {
+					linesDb
+						.add({
+							stroke: JSON.stringify(strokePool),
+							shape
+						})
+						.catch(console.error)
+					break
+				}
 			}
+			strokePool = []
 		}
-		strokePool = []
 	})
 
 	window.addEventListener(
 		'touchend',
-		e => {
+		(e) => {
 			console.log(strokePool, shape)
 			if (e.target.tagName !== 'CANVAS') return
-			if (strokePool.length && shape){ 
-				if(shape === 'circle' || shape === 'square'){
-					strokeDb
-					  .add({
-						stroke: JSON.stringify(strokePool),
-						shape
-					  })
-					  .catch(console.error)
-				}else if(shape === 'triangle' || shape === 'line'){
-					newStrokeDb
-					  .add({
-						stroke: JSON.stringify(strokePool),
-						shape
-					  })
-					  .catch(console.error)
+			if (strokePool.length && shape) {
+				switch (shape) {
+					case 'circle': {
+						circlesDb
+							.add({
+								stroke: JSON.stringify(strokePool),
+								shape
+							})
+							.catch(console.error)
+						break
+					}
+					case 'square': {
+						squaresDb
+							.add({
+								stroke: JSON.stringify(strokePool),
+								shape
+							})
+							.catch(console.error)
+						break
+					}
+					case 'triangle': {
+						trianglesDb
+							.add({
+								stroke: JSON.stringify(strokePool),
+								shape
+							})
+							.catch(console.error)
+						break
+					}
+					case 'line': {
+						linesDb
+							.add({
+								stroke: JSON.stringify(strokePool),
+								shape
+							})
+							.catch(console.error)
+						break
+					}
 				}
+				strokePool = []
 			}
-			strokePool = []
 		},
 		false
 	)
@@ -263,7 +299,7 @@ function setupShapePicker() {
 	picker.classList.add('shape-selector')
 
 	shapes
-		.map(shape => {
+		.map((shape) => {
 			const marker = document.createElement('div')
 			const shapeLetter = document.createElement('h3')
 			shapeLetter.innerHTML = shape.slice(0, 2)
@@ -277,7 +313,7 @@ function setupShapePicker() {
 
 			return marker
 		})
-		.forEach(shape => picker.appendChild(shape))
+		.forEach((shape) => picker.appendChild(shape))
 
 	picker.addEventListener('click', ({ target }) => {
 		shape = target.dataset.shape
@@ -306,5 +342,3 @@ function setupShapePicker() {
 }
 
 document.addEventListener('DOMContentLoaded', setup)
-
-// func()
