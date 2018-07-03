@@ -5,5 +5,7 @@ const settings = {timestampsInSnapshots: true};
 const db = firebase.firestore()
 db.settings(settings)
 
-export const strokeDb = db.collection("strokes")
-export const newStrokeDb = db.collection("newStrokes")
+export const circlesDb = db.collection('circles')
+export const squaresDb = db.collection('squares')
+export const trianglesDb = db.collection('triangles')
+export const linesDb = db.collection('lines')
