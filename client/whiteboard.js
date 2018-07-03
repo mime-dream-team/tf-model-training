@@ -5,7 +5,7 @@ import { circlesDb, squaresDb, trianglesDb, linesDb } from './fire/store'
 import runTraining from './model/training'
 
 // uncomment line 8 to run training
-// runTraining()
+runTraining()
 
 export default events
 
