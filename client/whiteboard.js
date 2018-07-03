@@ -4,7 +4,7 @@ const events = new EventEmitter()
 import { circlesDb, squaresDb, trianglesDb, linesDb } from './fire/store'
 import runTraining from './model/training'
 
-// refactored accordingly to run training later
+// uncomment line 8 to run training
 // runTraining()
 
 export default events
