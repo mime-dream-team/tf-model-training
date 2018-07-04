@@ -18,10 +18,16 @@ export default function processTrainingData(parsedShapes, numBuckets = 10) {
 
 		// TO RUN ALL DATASETS
 		shapeTrainingDataPoints.push(...dataSets) // all rotation permutations
-    dataSets.forEach(() => {
-      // For each of the stroke permutations, create an outputDataObject
-      let outputDataObject = createOutputData(rawShapeObject.shape)
-      shapeCorrespondingOutputData.push(outputDataObject)
+		dataSets.forEach(() => {
+		// For each of the stroke permutations, create an outputDataObject
+			let outputDataObject = createOutputData(rawShapeObject.shape)
+			shapeCorrespondingOutputData.push(outputDataObject)
+		})
+
+		dataSets.forEach(set => {
+			shapeTrainingDataPoints.push(set.slice().reverse())
+			let outputDataObject = createOutputData(rawShapeObject.shape)
+			shapeCorrespondingOutputData.push(outputDataObject)
 		})
   })
   return { shapeTrainingDataPoints, shapeCorrespondingOutputData }

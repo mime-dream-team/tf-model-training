@@ -21,7 +21,7 @@ const runTraining = () => {
 		.then(({ shapeTrainingDataPoints, shapeCorrespondingOutputData }) => {
 			const trainingDataTensor = tf.tensor2d(shapeTrainingDataPoints)
 			const outputDataTensor = tf.tensor2d(shapeCorrespondingOutputData)
-			const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare, testingDataLine])
+			const testingDataTensor = tf.tensor2d([testingDataCircle, testingDataSquare])
 
 			const startTime = Date.now()
 			model

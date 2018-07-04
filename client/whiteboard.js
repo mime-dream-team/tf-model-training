@@ -183,38 +183,38 @@ function setupCanvas() {
 		console.log(strokePool, shape)
 		if (e.target.tagName !== 'CANVAS') return
 		if(strokePool.length < 20) return
-		// switch (shape){
-		// 	case 'circle': {
-		// 		circlesDb
-		// 		  .add({
-		// 			stroke: JSON.stringify(strokePool),
-		// 			shape
-		// 		  })
-		// 		  .catch(console.error)
-		// 		  break;
-		// 	}
-		// 	case 'square': {
-		// 		squaresDb
-		// 		  .add({
-		// 			stroke: JSON.stringify(strokePool),
-		// 			shape
-		// 		  })
-		// 		  .catch(console.error)
-		// 		  break;
-		// 	}
-		// 	case 'line': {
-		// 		linesDb
-		// 		  .add({
-		// 			stroke: JSON.stringify(strokePool),
-		// 			shape
-		// 		  })
-		// 		  .catch(console.error)
-		// 		  break;
-		// 	}
-		// 	default: {
-		// 		strokePool = []
-		// 	}
-		// }
+		switch (shape){
+			case 'circle': {
+				circlesDb
+				  .add({
+					stroke: JSON.stringify(strokePool),
+					shape
+				  })
+				  .catch(console.error)
+				  break;
+			}
+			case 'square': {
+				squaresDb
+				  .add({
+					stroke: JSON.stringify(strokePool),
+					shape
+				  })
+				  .catch(console.error)
+				  break;
+			}
+			case 'line': {
+				linesDb
+				  .add({
+					stroke: JSON.stringify(strokePool),
+					shape
+				  })
+				  .catch(console.error)
+				  break;
+			}
+			default: {
+				strokePool = []
+			}
+		}
 		strokePool = []
 	})
 

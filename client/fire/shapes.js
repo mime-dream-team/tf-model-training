@@ -120,12 +120,12 @@ const fetchRawStrokeData = () => {
 				return {
 					//concat into separate arrays for training data and output data
 					shapeTrainingDataPoints: circles.shapeTrainingDataPoints.concat(
-						squares.shapeTrainingDataPoints,
-						lines.shapeTrainingDataPoints
+						squares.shapeTrainingDataPoints//,
+						// lines.shapeTrainingDataPoints
 					),
 					shapeCorrespondingOutputData: circles.shapeCorrespondingOutputData.concat(
-						squares.shapeCorrespondingOutputData,
-						lines.shapeCorrespondingOutputData
+						squares.shapeCorrespondingOutputData//,
+						// lines.shapeCorrespondingOutputData
 					)
 				}
 			})
