@@ -12,7 +12,7 @@ import { EventEmitter } from 'events'
 import func from './model/model'
 
 const events = new EventEmitter()
-import { strokeDb, newStrokeDb } from './fire/store'
+import { circlesDb, linesDb, squaresDb } from './fire/store'
 import runTraining from './model/training'
 
 runTraining()
@@ -52,7 +52,6 @@ export function draw(
 	// with the start, end and color data.
 	shouldBroadcast && events.emit('draw', start, end, strokeColor)
 }
-
 // State
 //// Stroke color
 let color
@@ -71,7 +70,7 @@ let lastMousePosition = {
 //// Color picker settings
 const colors = ['black', 'purple', 'red', 'green', 'orange', 'yellow', 'brown']
 
-const shapes = ['circle', 'square', 'triangle', 'line']
+const shapes = ['circle', 'square', 'line']
 
 function setup() {
 	document.body.appendChild(canvas)
@@ -181,25 +180,41 @@ function setupCanvas() {
 	)
 
 	window.addEventListener('mouseup', e => {
-		console.log(JSON.stringify(strokePool), shape)
+		console.log(strokePool, shape)
 		if (e.target.tagName !== 'CANVAS') return
-		if (strokePool.length && shape){ 
-			if(shape === 'circle' || shape === 'square'){
-				strokeDb
-				  .add({
-					stroke: JSON.stringify(strokePool),
-					shape
-				  })
-				  .catch(console.error)
-			}else if(shape === 'triangle' || shape === 'line'){
-				newStrokeDb
-				  .add({
-					stroke: JSON.stringify(strokePool),
-					shape
-				  })
-				  .catch(console.error)
-			}
-		}
+		if(strokePool.length < 20) return
+		// switch (shape){
+		// 	case 'circle': {
+		// 		circlesDb
+		// 		  .add({
+		// 			stroke: JSON.stringify(strokePool),
+		// 			shape
+		// 		  })
+		// 		  .catch(console.error)
+		// 		  break;
+		// 	}
+		// 	case 'square': {
+		// 		squaresDb
+		// 		  .add({
+		// 			stroke: JSON.stringify(strokePool),
+		// 			shape
+		// 		  })
+		// 		  .catch(console.error)
+		// 		  break;
+		// 	}
+		// 	case 'line': {
+		// 		linesDb
+		// 		  .add({
+		// 			stroke: JSON.stringify(strokePool),
+		// 			shape
+		// 		  })
+		// 		  .catch(console.error)
+		// 		  break;
+		// 	}
+		// 	default: {
+		// 		strokePool = []
+		// 	}
+		// }
 		strokePool = []
 	})
 
@@ -208,23 +223,23 @@ function setupCanvas() {
 		e => {
 			console.log(strokePool, shape)
 			if (e.target.tagName !== 'CANVAS') return
-			if (strokePool.length && shape){ 
-				if(shape === 'circle' || shape === 'square'){
-					strokeDb
-					  .add({
-						stroke: JSON.stringify(strokePool),
-						shape
-					  })
-					  .catch(console.error)
-				}else if(shape === 'triangle' || shape === 'line'){
-					newStrokeDb
-					  .add({
-						stroke: JSON.stringify(strokePool),
-						shape
-					  })
-					  .catch(console.error)
-				}
-			}
+			// if (strokePool.length && shape){ 
+			// 	if(shape === 'circle' || shape === 'square'){
+			// 		strokeDb
+			// 		  .add({
+			// 			stroke: JSON.stringify(strokePool),
+			// 			shape
+			// 		  })
+			// 		  .catch(console.error)
+			// 	}else if(shape === 'triangle' || shape === 'line'){
+			// 		newStrokeDb
+			// 		  .add({
+			// 			stroke: JSON.stringify(strokePool),
+			// 			shape
+			// 		  })
+			// 		  .catch(console.error)
+			// 	}
+			// }
 			strokePool = []
 		},
 		false
