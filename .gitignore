@@ -2,3 +2,4 @@ bundle.js*
 node_modules
 .idea
 npm-debug.log
+fireconfig.js
